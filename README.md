@@ -75,4 +75,4 @@ This project is licensed under the GNU General Public License v3.0 (GPL-3.0). Se
 
 ## Contact
 
-If you have any questions or suggestions, you can reach out to the project maintainer through GitHub or via email: your-email@example.com.
+If you have any questions or suggestions, you can reach out to the project maintainer through GitHub or via email: alexandrd542@gmail.com
