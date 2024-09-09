@@ -1,7 +1,7 @@
 # zen-kernel-OS
 
 ## Description
-
+- [RUS](https://github.com/Junsious/zen-kernel-OS/blob/main/README_ru.md)
 `zen-kernel-OS` is an educational project aimed at creating an operating system from scratch. The project includes a kernel written in both C and Rust, with basic functionality for text output and command input support. This project is intended to provide hands-on experience in operating system development, cross-compilation, and low-level programming.
 
 ## Building and Running
