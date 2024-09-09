@@ -30,13 +30,12 @@
 3. **Run the ISO image with QEMU**:
 
     ```bash
-    qemu-system-i386 -cdrom myos.iso
+    qemu-system-i386 -cdrom ZenOS.iso
     ```
 
 ### Project Structure
 
 - **`kernel.c`** — Kernel source code in C.
-- **`kernel.rs`** — Kernel source code in Rust.
 - **`boot.asm`** — Assembler code for the bootloader.
 - **`linker.ld`** — Linker script used for building the kernel.
 - **`grub.cfg`** — GRUB configuration file for loading the kernel.
