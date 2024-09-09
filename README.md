@@ -43,6 +43,7 @@
 - **`linker.ld`** — Linker script used for building the kernel.
 - **`grub.cfg`** — GRUB configuration file for loading the kernel.
 - **`Makefile`** — Build automation file.
+- **`lib.c`** — For realisation of basic and minimal functions on C.
 
 ## Development and Contributing
 
