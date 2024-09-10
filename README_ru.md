@@ -1,5 +1,5 @@
 # zen-kernel-OS
-![2](https://github.com/user-attachments/assets/251175cf-3934-4882-a034-455bd881c5a7)
+![2](https://github.com/user-attachments/assets/47cff0b6-14a5-44d6-9dda-248524830bcb)
 
 ## Описание
 - [ENG_README](https://github.com/Junsious/zen-kernel-OS/blob/main/README.md)
