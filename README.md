@@ -1,7 +1,7 @@
 # zen-kernel-OS
 ![2](https://github.com/user-attachments/assets/47cff0b6-14a5-44d6-9dda-248524830bcb)
 
-[![Junsious's github activity graph](https://github-readme-activity-graph.vercel.app/graph?username=[junsious](https://github.com/Junsious/zen-kernel-OS)&theme=rogue&custom_title=Junsious&hide_border=true)](https://github.com/ashutosh00710/github-readme-activity-graph)
+[![Junsious's github activity graph](https://github-readme-activity-graph.vercel.app/graph?username=https://github.com/Junsious/zen-kernel-OS&theme=rogue&custom_title=Junsious&hide_border=true)](https://github.com/ashutosh00710/github-readme-activity-graph)
 ## Description
 - [RUS_README](https://github.com/Junsious/zen-kernel-OS/blob/main/README_ru.md)
 
