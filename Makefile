@@ -1,72 +1,42 @@
-# Указываем имя выходного файла
-OSNAME := ZenOS
-ISOFILE := $(OSNAME).iso
-BINARY := $(OSNAME).bin
-
-# Указываем компиляторы и ассемблер
-AS := i386-elf-as
-CC := i386-elf-gcc
-
-# Флаги для компилятора и линковщика
-CFLAGS := -std=gnu99 -ffreestanding -O2 -Wall -Wextra
-LDFLAGS := -ffreestanding -O2 -nostdlib
+# Установите переменные для вашего кросс-компилятора
+AS = i686-elf-as
+CC = i686-elf-gcc
+LD = i686-elf-gcc
+GRUB = grub-mkrescue
 
 # Файлы
-KERNEL_C_SRC := kernel.c
-LIB_C_SRC := lib.c
-BOOT_SRC := boot.asm
-LINKER_SCRIPT := linker.ld
-GRUB_CFG := grub.cfg
+ASM_SRC = boot.asm
+ASM_OBJ = boot.o
+C_SRC = kernel.c keyboard_driver.c
+C_OBJ = kernel.o keyboard_driver.o
+LINKER_SCRIPT = linker.ld
+OUTPUT_BIN = ZenOS.bin
+ISO_DIR = isodir
+ISO_IMG = ZenOS.iso
 
-# Объектные файлы
-OBJS := boot.o kernel.o lib.o
+# Цели сборки
+all: $(ISO_IMG)
 
-# Директории
-ISO_DIR := isodir
-BOOT_DIR := $(ISO_DIR)/boot
-GRUB_DIR := $(BOOT_DIR)/grub
+# Сборка ассемблерного кода
+$(ASM_OBJ): $(ASM_SRC)
+	$(AS) $(ASM_SRC) -o $(ASM_OBJ)
 
-# Прогресс-бар цвета
-define print_progress
-	@printf "\033[1;32m[ %-20s ]\033[0m\r" $(1)
-endef
+# Сборка C-кода
+$(C_OBJ): $(C_SRC)
+	$(CC) -c -std=gnu99 -ffreestanding -O2 -Wall -Wextra $(C_SRC)
 
-# Цель по умолчанию
-all: $(ISOFILE)
+# Линковка
+$(OUTPUT_BIN): $(ASM_OBJ) $(C_OBJ)
+	$(LD) -T $(LINKER_SCRIPT) -ffreestanding -O2 -nostdlib -lgcc -o $(OUTPUT_BIN) $(ASM_OBJ) $(C_OBJ)
 
-# Сборка ISO
-$(ISOFILE): $(BINARY) $(GRUB_CFG)
-	@$(call print_progress, "ISO Creation")
-	mkdir -p $(GRUB_DIR)
-	cp $(BINARY) $(BOOT_DIR)/$(BINARY)
-	cp $(GRUB_CFG) $(GRUB_DIR)/grub.cfg
-	grub-mkrescue -o $(ISOFILE) $(ISO_DIR)
-	@echo "ISO created successfully"
-
-# Сборка бинарного файла
-$(BINARY): $(OBJS) $(LINKER_SCRIPT)
-	@$(call print_progress, "Linking")
-	$(CC) -T $(LINKER_SCRIPT) -o $(BINARY) $(LDFLAGS) $(OBJS) -lgcc
-	grub-file --is-x86-multiboot $(BINARY)
-	@echo "Binary created successfully"
-
-# Сборка объектных файлов
-boot.o: $(BOOT_SRC)
-	@$(call print_progress, "Assembling boot.asm")
-	$(AS) $(BOOT_SRC) -o boot.o
-
-kernel.o: $(KERNEL_C_SRC)
-	@$(call print_progress, "Compiling kernel.c")
-	$(CC) -c $(KERNEL_C_SRC) -o kernel.o $(CFLAGS)
-
-lib.o: $(LIB_C_SRC)
-	@$(call print_progress, "Compiling lib.c")
-	$(CC) -c $(LIB_C_SRC) -o lib.o $(CFLAGS)
+# Создание ISO-образа
+$(ISO_IMG): $(OUTPUT_BIN)
+	mkdir -p $(ISO_DIR)/boot/grub
+	cp $(OUTPUT_BIN) $(ISO_DIR)/boot/ZenOS.bin
+	cp grub.cfg $(ISO_DIR)/boot/grub/grub.cfg
+	$(GRUB) -o $(ISO_IMG) $(ISO_DIR)
 
 # Очистка
 clean:
-	@echo "Cleaning up..."
-	rm -rf $(OBJS) $(BINARY) $(ISOFILE) $(ISO_DIR)
-	@echo "Cleaned successfully"
-
-.PHONY: all clean
+	rm -f $(ASM_OBJ) $(C_OBJ) $(OUTPUT_BIN) $(ISO_IMG)
+	rm -rf $(ISO_DIR)
