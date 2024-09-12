@@ -1,6 +1,6 @@
 # zen-kernel-OS
 ![2](https://github.com/user-attachments/assets/47cff0b6-14a5-44d6-9dda-248524830bcb)
-If you have ideas, don’t be shy and write them, create threads, ask to be contributors, we will be only too glad to see new people in this project
+## If you have ideas, don’t be shy and write them, create threads, ask to be contributors, we will be only too glad to see new people in this project
 
 ## Description
 - [RUS_README](https://github.com/Junsious/zen-kernel-OS/blob/main/README_ru.md)
