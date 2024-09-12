@@ -5,6 +5,7 @@
 #define KEYBOARD_DATA_PORT 0x60
 #define KEYBOARD_STATUS_PORT 0x64
 
+// Карта клавиатуры для обычного ввода
 static const char keyboard_map[256] = {
     0, 27, '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '-', '=', '\b', '\t',
     'q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p', '[', ']', '\n', 0,
@@ -13,13 +14,24 @@ static const char keyboard_map[256] = {
     '*', 0, ' ', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
 };
 
+// Карта клавиатуры для Shift
+static const char shift_keyboard_map[256] = {
+    0, 27, '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '_', '+', '\b', '\t',
+    'Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P', '{', '}', '\n', 0,
+    'A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', ':', '"', '~', 0,
+    '|', 'Z', 'X', 'C', 'V', 'B', 'N', 'M', '<', '>', '?', 0,
+    '*', 0, ' ', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+};
+
 // Модификаторы клавиш
 #define SHIFT_LEFT 0x2A
 #define SHIFT_RIGHT 0x36
 #define CTRL_LEFT 0x1D
-#define CTRL_RIGHT 0x1E
 #define ALT_LEFT 0x38
-#define ALT_RIGHT 0x39
+#define SHIFT_LEFT_RELEASE 0xAA
+#define SHIFT_RIGHT_RELEASE 0xB6
+#define CTRL_LEFT_RELEASE 0x9D
+#define ALT_LEFT_RELEASE 0xB8
 
 static bool shift_pressed = false;
 static bool ctrl_pressed = false;
@@ -35,12 +47,14 @@ static inline uint8_t inb(uint16_t port) {
     return ret;
 }
 
+// Чтение с клавиатуры
 char keyboard_read(void) {
     uint8_t scan_code;
     char ch = 0;
 
+    // Ожидание ввода с клавиатуры
     while ((inb(KEYBOARD_STATUS_PORT) & 0x01) == 0) {
-        // Ожидание, пока в порту появится новый символ
+        // Ожидание данных
     }
 
     scan_code = inb(KEYBOARD_DATA_PORT);
@@ -50,41 +64,38 @@ char keyboard_read(void) {
         case SHIFT_LEFT:
         case SHIFT_RIGHT:
             shift_pressed = true;
-            break;
-        case CTRL_LEFT:
-        case CTRL_RIGHT:
-            ctrl_pressed = true;
-            break;
-        case ALT_LEFT:
-        case ALT_RIGHT:
-            alt_pressed = true;
-            break;
-        case 0xAA: // Left Shift release
-        case 0xB6: // Right Shift release
+            return 0;
+        case SHIFT_LEFT_RELEASE:
+        case SHIFT_RIGHT_RELEASE:
             shift_pressed = false;
-            break;
-        case 0x9D: // Left Ctrl release
-        case 0x9E: // Right Ctrl release
+            return 0;
+        case CTRL_LEFT:
+            ctrl_pressed = true;
+            return 0;
+        case CTRL_LEFT_RELEASE:
             ctrl_pressed = false;
-            break;
-        case 0xB8: // Left Alt release
-        case 0xBA: // Right Alt release
+            return 0;
+        case ALT_LEFT:
+            alt_pressed = true;
+            return 0;
+        case ALT_LEFT_RELEASE:
             alt_pressed = false;
-            break;
+            return 0;
         default:
-            // Преобразование в символ при условии, что это правильный скан-код
-            ch = keyboard_map[scan_code];
-            if (shift_pressed) {
-                // Преобразование в верхний регистр или спецсимволы
-                if (ch >= 'a' && ch <= 'z') {
-                    ch -= 32; // Преобразование в верхний регистр
-                }
-            }
             break;
+    }
+
+    // Преобразование в символ
+    if (shift_pressed) {
+        ch = shift_keyboard_map[scan_code];
+    } else {
+        ch = keyboard_map[scan_code];
     }
 
     return ch;
 }
+
+// Инициализация клавиатуры
 void keyboard_initialize(void) {
     // Сброс клавиатурного контроллера
     outb(KEYBOARD_STATUS_PORT, 0xFF);

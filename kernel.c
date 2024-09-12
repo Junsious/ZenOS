@@ -53,6 +53,7 @@ static int strcmp(const char* str1, const char* str2) {
     }
     return *(unsigned char*)str1 - *(unsigned char*)str2;
 }
+
 static void terminal_putentryat(char c, uint8_t color, size_t x, size_t y) {
     const size_t index = y * VGA_WIDTH + x;
     terminal_buffer[index] = vga_entry(c, color);
@@ -66,29 +67,53 @@ static void terminal_initialize(void) {
 
     for (size_t y = 0; y < VGA_HEIGHT; y++) {
         for (size_t x = 0; x < VGA_WIDTH; x++) {
-            terminal_putentryat(' ', terminal_color, x, y);
+            terminal_putentryat(' ', terminal_color, x, y);  // Очищаем видеопамять пробелами
         }
     }
+}
+
+static void terminal_hidecursor(void) {
+    terminal_putentryat(' ', terminal_color, terminal_column, terminal_row);
+}
+
+static void terminal_showcursor(void) {
+    terminal_putentryat('_', terminal_color, terminal_column, terminal_row);
+}
+
+static void terminal_scroll(void) {
+    for (size_t y = 1; y < VGA_HEIGHT; y++) {
+        for (size_t x = 0; x < VGA_WIDTH; x++) {
+            terminal_buffer[(y - 1) * VGA_WIDTH + x] = terminal_buffer[y * VGA_WIDTH + x];
+        }
+    }
+
+    // Очищаем последнюю строку
+    for (size_t x = 0; x < VGA_WIDTH; x++) {
+        terminal_putentryat(' ', terminal_color, x, VGA_HEIGHT - 1);
+    }
+
+    terminal_row = VGA_HEIGHT - 1;
 }
 
 static void terminal_putchar(char c) {
+    terminal_hidecursor();
     if (c == '\n') {
         terminal_column = 0;
         if (++terminal_row == VGA_HEIGHT) {
-            terminal_row = 0;  // Перенос строки, если вышли за пределы экрана
+            terminal_scroll();  // Прокрутка экрана, если достигли конца
         }
     } else {
-        terminal_putentryat(c, terminal_color, terminal_column, terminal_row);
-        terminal_column++;  // Обновляем столбец после вставки символа
-        if (terminal_column == VGA_WIDTH) {  // Проверяем, не достигли ли конца строки
+        if (terminal_column >= VGA_WIDTH) {
             terminal_column = 0;
-            if (++terminal_row == VGA_HEIGHT) {  // Проверяем, не достигли ли конца экрана
-                terminal_row = 0;
+            if (++terminal_row == VGA_HEIGHT) {
+                terminal_scroll();  // Прокрутка экрана
             }
         }
+        terminal_putentryat(c, terminal_color, terminal_column, terminal_row);
+        terminal_column++;
     }
+    terminal_showcursor();
 }
-
 
 static void terminal_writestring(const char* data) {
     size_t len = strlen(data);
@@ -102,20 +127,20 @@ static void handle_input(char* input) {
         terminal_writestring("Available commands:\n");
         terminal_writestring("!help: Display this help message\n");
     } else {
-        terminal_writestring("Unknown command: ");
-        terminal_writestring(input);
-        terminal_putchar('\n');
+        terminal_writestring("unknown command\n");
     }
 }
 
 static void terminal_backspace(void) {
+    terminal_hidecursor();
     if (terminal_column > 0) {
         terminal_column--;
     } else if (terminal_row > 0) {
         terminal_row--;
         terminal_column = VGA_WIDTH - 1;
     }
-    terminal_putentryat(' ', terminal_color, terminal_column, terminal_row);  // Удаление символа
+    terminal_putentryat(' ', terminal_color, terminal_column, terminal_row);
+    terminal_showcursor();
 }
 
 static void terminal_readstring(char* buffer, size_t max_length) {
@@ -123,39 +148,61 @@ static void terminal_readstring(char* buffer, size_t max_length) {
     char c = ' ';
 
     while (length < max_length - 1) {
-        c = keyboard_read();  // Считываем символ с клавиатуры
+        c = keyboard_read();
 
         if (c == '\n') {
             terminal_putchar('\n');
             break;
-        } else if (c == '\b') {  // Обработка backspace
+        } else if (c == '\b') {
             if (length > 0) {
                 length--;
-                terminal_backspace();  // Стереть предыдущий символ
+                terminal_backspace();
             }
-        } else {
+        } else if (c >= ' ') {  // Только отображаемые символы
             buffer[length++] = c;
             terminal_putchar(c);
         }
     }
-    buffer[length] = '\0';  // Завершение строки
+    buffer[length] = '\0';  // Завершаем строку
 }
 
 static void set_prompt_color(void) {
+    terminal_hidecursor();  // Скрываем курсор перед выводом строки
     uint8_t old_color = terminal_color;
     terminal_color = vga_entry_color(VGA_COLOR_GREEN, VGA_COLOR_BLACK);  // Установка зелёного цвета для подсказки
     terminal_writestring("ZenOS> ");
     terminal_color = old_color;  // Возврат к старому цвету
+    terminal_showcursor();  // Отображаем курсор после строки
+}
+
+static void delay() {
+    for (volatile int i = 0; i < 1000000000; i++) {
+        // Пустой цикл для задержки ~10 секунд
+    }
+}
+
+static void welcome_message(void) {
+    terminal_writestring("Welcome To ZenOS\n");
+    delay();
+    terminal_initialize();
 }
 
 void kernel_main(void) {
     terminal_initialize();
+    welcome_message();
 
     while (true) {
         set_prompt_color();
 
         char input[256];
         terminal_readstring(input, sizeof(input));
-        handle_input(input);
+
+        if (strlen(input) > 0) {
+            if (input[0] == '!') {
+                handle_input(input);  // Обработка команд, начинающихся с "!"
+            } else {
+                terminal_writestring("\n");  // Просто перенос строки, если команда не начинается с "!"
+            }
+        }
     }
 }
