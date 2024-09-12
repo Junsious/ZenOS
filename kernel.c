@@ -123,10 +123,52 @@ static void terminal_writestring(const char* data) {
 }
 
 static void handle_input(char* input) {
-    if (strcmp(input, "!help") == 0) {
+    if (strcmp(input, "!ZenOS") == 0) {
+        terminal_writestring("                              -=====+=---::. :%@%##%@%+.            \n");
+        terminal_writestring("                             +@@@@%*######%%%%#+++++**#%+           \n");
+        terminal_writestring("                            :@@@@@%++++++++++++*%%%%#+++#%=         \n");
+        terminal_writestring("                            *@@@@@%++++++++++#%@@**#@%*++*%#.       \n");
+        terminal_writestring("           =*=            :=@@@@@@%+++++++++@@#*++++*%@#+++#%=      \n");
+        terminal_writestring("        .*@@@@@+-     :+#@@@@@@@@@%+++++++++%@*+++++++*%%*++*@%:    \n");
+        terminal_writestring("        #@@@@@@@@@#+#@@@@@@@@@@@@@%+++++++*##@@+++++++++*%#+++#@:   \n");
+        terminal_writestring("         %@@@@@@@@@@@@@@@@@@@@@@@@%====++*@@#%@#+++++++++++++++*@.  \n");
+        terminal_writestring("         .@@@@@@@@@@@@@@@@@@@@@@@@%======*@@+*@@++++++++++++++++%%  \n");
+        terminal_writestring("          =@@@@@@@@@@@@@@@@@@@@@@@%======%@@*+%@*+++++++++++++++*@- \n");
+        terminal_writestring("          -@@@@@@@@@@@@@@@@@@@@@@@%====*%@%@%=#@%++++++++++++++++%# \n");
+        terminal_writestring("          #@@@@@@@@@@@@@@@@@@@@@@@%*#%%*#@#%@++@@+=++++++++++++++#@ \n");
+        terminal_writestring("         +@@@@@@@@@@@@@@@@@@@@@@@@@@#:.=@%#%@+=#@+==+++++++++++++*@.\n");
+        terminal_writestring("      .-#@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@%%%%@%==+@#===++++++++++++#% \n");
+        terminal_writestring(" :+#%@@@@@@@@@@@@@@@@@@@@@@@@@%%@@@++*#####*====@%====++++++++++*@# \n");
+        terminal_writestring("-@@@@@@@@@@@@@@@@@@@@@@@@@@@@#: -@@%=============%%=====++++++++*@* \n");
+        terminal_writestring("+@@@@@@@@@@@@@@@@@@@@@@@@@@@#   -@@%=============%@=====++++++++*@: \n");
+        terminal_writestring("*@@@@@@@@@@@@@@@@@@@@@@@@@@@=   -@@%======*%+====%@+====+++++++++#@:\n");
+        terminal_writestring("*@@@@@@@@@@@@@@@@@@@@@@@@@@@*   -@@%======+@@====#@=====++++++++++@%\n");
+        terminal_writestring("=@@@@@@@@@@@@@@@@@@@@@@@@@@@@+  -@@%=======%@*===%@=====++++++++++@*\n");
+        terminal_writestring(" :-+#%@@@@@@@@@@@@@@@@@@@@@@@@@##@@%=======*@%==+@%====++++++++++%@-\n");
+        terminal_writestring("      .-%@@@@@@@@@@@@@@@@@@@@@@@@@%=======*@%==*@*====++++++++*@%:  \n");
+        terminal_writestring("         *@@@@@@@@@@@@@@@@@@@@@@@@%=======*@%=+@%+===++++++++@@-    \n");
+        terminal_writestring("          #@@@@@@@@@@@@@@@@@@@@@@@%=======*@@#%@*===+++++++++@@.    \n");
+        terminal_writestring("          -@@@@@@@@@@@@@@@@@@@@@@@%=======*@@@@#==+++++++++++#@+    \n");
+        terminal_writestring("          :@@@@@@@@@@@@@@@@@@@@@@@%=======*@@@@*=+++++++++++++@@    \n");
+        terminal_writestring("          %@@@@@@@@@@@@@@@@@@@@@@@%=======#@#*@@*+++++++++++++#@-   \n");
+        terminal_writestring("         #@@@@@@@@@@@@@@@@@@@@@@@@%=======#@# *@@+++++++++**++#@-   \n");
+        terminal_writestring("        *@@@@@@@@@@#%@@@@@@@@@@@@@%+++++++*@#  #@@%%@@%%#*#%*#@*    \n");
+        terminal_writestring("        :#@@@@@@*-   :=*@@@@@@@@@@%++++++++@@#%%##**+***#@@@@%=     \n");
+        terminal_writestring("          :*%+:          :-*@@@@@@%++++++++%@*+++++++++++*@+        \n");
+        terminal_writestring("                            #@@@@@%++++++++*@@*+***+++++++@*        \n");
+        terminal_writestring("                            -@@@@@%+++++++++*@@@@@@++++++#@=:.      \n");
+        terminal_writestring("                             *@@@@@*++++++++++##%%*+++++#@@@%=      \n");
+        terminal_writestring("                              =+++#%@%##*************##%@%*-        \n");
+    } 
+    else if (strcmp(input, "!help") == 0) {
         terminal_writestring("Available commands:\n");
-        terminal_writestring("!help: Display this help message\n");
-    } else {
+        terminal_writestring("!help: Show available commands.\n");
+        terminal_writestring("!clear: Clear the terminal screen.\n");
+    }
+    else if (strcmp(input, "!clear") == 0) {
+        terminal_initialize();  // Очистка экрана
+    } 
+    else {
         terminal_writestring("unknown command\n");
     }
 }
