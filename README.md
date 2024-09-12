@@ -44,7 +44,7 @@
 - **`linker.ld`** — Linker script used for building the kernel.
 - **`grub.cfg`** — GRUB configuration file for loading the kernel.
 - **`Makefile`** — Build automation file.
-- **`keyboard_driver.c`** — Driver for your keyboard on C.
+- **`keyboard_driver.c`** — Driver for your keyboard on C with special characters.
 
 ## Development and Contributing
 
