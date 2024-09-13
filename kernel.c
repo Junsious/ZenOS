@@ -121,6 +121,17 @@ static void terminal_writestring(const char* data) {
         terminal_putchar(data[i]);
     }
 }
+static void delay() {
+    for (volatile int i = 0; i < 1000000000; i++) {
+        // Пустой цикл для задержки ~10 секунд
+    }
+}
+
+static void welcome_message(void) {
+    terminal_writestring("Welcome To ZenOS\n");
+    delay();
+    terminal_initialize();
+}
 
 static void handle_input(char* input) {
     if (strcmp(input, "!ZenOS") == 0) {
@@ -159,17 +170,16 @@ static void handle_input(char* input) {
         terminal_writestring("                            -@@@@@%+++++++++*@@@@@@++++++#@=:.      \n");
         terminal_writestring("                             *@@@@@*++++++++++##%%*+++++#@@@%=      \n");
         terminal_writestring("                              =+++#%@%##*************##%@%*-        \n");
-    } 
-    else if (strcmp(input, "!help") == 0) {
-        terminal_writestring("Available commands:\n");
-        terminal_writestring("!help: Show available commands.\n");
-        terminal_writestring("!clear: Clear the terminal screen.\n");
-    }
-    else if (strcmp(input, "!clear") == 0) {
+    } else if (strcmp(input, "!clear") == 0) {
         terminal_initialize();  // Очистка экрана
-    } 
-    else {
-        terminal_writestring("unknown command\n");
+    } else if (strcmp(input, "!about") == 0) {
+        terminal_writestring("ZenOS: A simple custom operating system.\n");
+    } else if (strcmp(input, "!reboot") == 0) {
+        terminal_writestring("Rebooting...\n");
+        terminal_initialize();
+        welcome_message();
+    } else {
+        terminal_writestring("Unknown command\n");
     }
 }
 
@@ -215,18 +225,6 @@ static void set_prompt_color(void) {
     terminal_writestring("ZenOS> ");
     terminal_color = old_color;  // Возврат к старому цвету
     terminal_showcursor();  // Отображаем курсор после строки
-}
-
-static void delay() {
-    for (volatile int i = 0; i < 1000000000; i++) {
-        // Пустой цикл для задержки ~10 секунд
-    }
-}
-
-static void welcome_message(void) {
-    terminal_writestring("Welcome To ZenOS\n");
-    delay();
-    terminal_initialize();
 }
 
 void kernel_main(void) {
