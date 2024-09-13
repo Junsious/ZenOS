@@ -164,35 +164,10 @@ static void handle_input(char* input) {
         terminal_writestring("Available commands:\n");
         terminal_writestring("!help: Show available commands.\n");
         terminal_writestring("!clear: Clear the terminal screen.\n");
-        terminal_writestring("!time: Show current time (emulated).\n");
-        terminal_writestring("!shutdown: Shutdown the system.\n");
-        terminal_writestring("!reboot: Reboot the system.\n");
-        terminal_writestring("!echo <message>: Echo the message.\n");
     }
     else if (strcmp(input, "!clear") == 0) {
         terminal_initialize();  // Очистка экрана
-    }
-    else if (strcmp(input, "!time") == 0) {
-        terminal_writestring("Current time: 12:00 (emulated)\n");
-    }
-    else if (strcmp(input, "!shutdown") == 0) {
-        terminal_writestring("Shutting down...\n");
-        delay();
-        // В реальной системе здесь был бы вызов для завершения работы
-        // Например, можно выйти из бесконечного цикла
-        while (1);  // Симуляция остановки системы
-    }
-    else if (strcmp(input, "!reboot") == 0) {
-        terminal_writestring("Rebooting...\n");
-        delay();
-        // Для перезагрузки в реальных системах вызываются аппаратные инструкции.
-        // Например: asm("jmp 0x0000"); в x86
-        kernel_main();  // Симуляция перезагрузки (просто перезапускаем main)
-    }
-    else if (strncmp(input, "!echo ", 6) == 0) {
-        terminal_writestring(input + 6);
-        terminal_writestring("\n");
-    }
+    } 
     else {
         terminal_writestring("unknown command\n");
     }
