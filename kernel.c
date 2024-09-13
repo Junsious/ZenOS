@@ -2,7 +2,6 @@
 #include <stddef.h>
 #include <stdint.h>
 #include "keyboard_driver.h"
-
 // Глобальные переменные
 static size_t terminal_row;
 static size_t terminal_column;
