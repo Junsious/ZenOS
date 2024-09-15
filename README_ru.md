@@ -35,7 +35,7 @@
 3. **Запустите ISO-образ с помощью QEMU**:
 
     ```bash
-    qemu-system-i386 -cdrom ZenOS.iso
+    qemu-system-i386 -cdrom ZenOS.iso / qemu-system-i386 -cdrom ZenOS.bin -curses 
     ```
 
 ### Структура проекта
