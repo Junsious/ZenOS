@@ -1,9 +1,7 @@
-# Makefile
-
 # Установите переменные для вашего кросс-компилятора
-AS = nasm
-CC = x86_64-elf-gcc
-LD = x86_64-elf-gcc
+AS = i686-elf-as
+CC = i686-elf-gcc
+LD = i686-elf-gcc
 GRUB = grub-mkrescue
 
 # Файлы
@@ -21,7 +19,7 @@ all: $(ISO_IMG)
 
 # Сборка ассемблерного кода
 $(ASM_OBJ): $(ASM_SRC)
-	$(AS) -f elf64 $(ASM_SRC) -o $(ASM_OBJ)
+	$(AS) $(ASM_SRC) -o $(ASM_OBJ)
 
 # Сборка C-кода
 $(C_OBJ): $(C_SRC)
@@ -29,7 +27,7 @@ $(C_OBJ): $(C_SRC)
 
 # Линковка
 $(OUTPUT_BIN): $(ASM_OBJ) $(C_OBJ)
-	$(LD) -T $(LINKER_SCRIPT) -ffreestanding -O2 -nostdlib -lgcc -o $(OUTPUT_BIN) $(ASM_OBJ) $(C_OBJ) -e _start
+	$(LD) -T $(LINKER_SCRIPT) -ffreestanding -O2 -nostdlib -lgcc -o $(OUTPUT_BIN) $(ASM_OBJ) $(C_OBJ)
 
 # Создание ISO-образа
 $(ISO_IMG): $(OUTPUT_BIN)
