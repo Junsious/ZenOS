@@ -121,6 +121,7 @@ static void terminal_writestring(const char* data) {
         terminal_putchar(data[i]);
     }
 }
+
 static void delay() {
     for (volatile int i = 0; i < 1000000000; i++) {
         // Пустой цикл для задержки ~10 секунд
@@ -139,12 +140,12 @@ static void terminal_backspace(void) {
     terminal_showcursor();
 }
 
-
 static void welcome_message(void) {
     terminal_writestring("Welcome To ZenOS\n");
     delay();
     terminal_initialize();
 }
+
 static void terminal_readstring(char* buffer, size_t max_length) {
     size_t length = 0;
     char c = ' ';
@@ -167,8 +168,6 @@ static void terminal_readstring(char* buffer, size_t max_length) {
     }
     buffer[length] = '\0';  // Завершаем строку
 }
-
-
 static void handle_input(char* input) {
     if (strcmp(input, "!ZenOS") == 0) {
         terminal_writestring("                              -=====+=---::. :%@%##%@%+.            \n");
@@ -233,11 +232,11 @@ static void handle_input(char* input) {
         terminal_writestring("\n");
     } else if (strcmp(input, "!shutdown") == 0) {
         terminal_writestring("Shutting down the system...\n");
-        // Остановка или перезагрузка системы, если это реализовано
-        // Зависание системы после завершения команд
+    
+    // Завершаем работу системы, выполняя бесконечный цикл с hlt
         while (true) {
             asm volatile("hlt");
-        }
+    }
     } else {
         terminal_writestring("Unknown command. Type !help for a list of available commands.\n");
     }
