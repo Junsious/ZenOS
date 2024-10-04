@@ -22,7 +22,7 @@
 1. **Clone the repository**:
 
     ```bash
-    git clone https://github.com/yourusername/zen-kernel-OS.git
+    git clone https://github.com/yourusername/ZenOS.git
     cd zen-kernel-OS
     ```
 
