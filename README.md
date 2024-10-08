@@ -1,10 +1,11 @@
 # ZenOS
 ![2](https://github.com/user-attachments/assets/47cff0b6-14a5-44d6-9dda-248524830bcb)
 
+- [RUS_README](https://github.com/Junsious/zen-kernel-OS/blob/main/README_ru.md)
+
 ## If you have ideas, don’t be shy and write them, create threads, ask to be contributors, we will be only too glad to see new people in this project
 
 ## Description
-- [RUS_README](https://github.com/Junsious/zen-kernel-OS/blob/main/README_ru.md)
 
   
 - `zen-kernel-OS` is an educational project aimed at creating an operating system from scratch. The project includes a kernel written in both C and Rust, with basic functionality for text output and command input support. This project is intended to provide hands-on experience in operating system development, cross-compilation, and low-level programming. The project will also develop.
