@@ -3,6 +3,7 @@
 
 - [RUS_README](https://github.com/Junsious/zen-kernel-OS/blob/main/README_ru.md)
 
+
 ## If you have ideas, don’t be shy and write them, create threads, ask to be contributors, we will be only too glad to see new people in this project
 
 ## Description
