@@ -122,6 +122,52 @@ static void terminal_writestring(const char* data) {
     }
 }
 
+static void delay() {
+    for (volatile int i = 0; i < 1000000000; i++) {
+        // Пустой цикл для задержки ~10 секунд
+    }
+}
+
+static void terminal_backspace(void) {
+    terminal_hidecursor();
+    if (terminal_column > 0) {
+        terminal_column--;
+    } else if (terminal_row > 0) {
+        terminal_row--;
+        terminal_column = VGA_WIDTH - 1;
+    }
+    terminal_putentryat(' ', terminal_color, terminal_column, terminal_row);
+    terminal_showcursor();
+}
+
+static void welcome_message(void) {
+    terminal_writestring("Welcome To ZenOS\n");
+    delay();
+    terminal_initialize();
+}
+
+static void terminal_readstring(char* buffer, size_t max_length) {
+    size_t length = 0;
+    char c = ' ';
+
+    while (length < max_length - 1) {
+        c = keyboard_read();
+
+        if (c == '\n') {
+            terminal_putchar('\n');
+            break;
+        } else if (c == '\b') {
+            if (length > 0) {
+                length--;
+                terminal_backspace();
+            }
+        } else if (c >= ' ') {  // Только отображаемые символы
+            buffer[length++] = c;
+            terminal_putchar(c);
+        }
+    }
+    buffer[length] = '\0';  // Завершаем строку
+}
 static void handle_input(char* input) {
     if (strcmp(input, "!ZenOS") == 0) {
         terminal_writestring("                              -=====+=---::. :%@%##%@%+.            \n");
@@ -159,53 +205,41 @@ static void handle_input(char* input) {
         terminal_writestring("                            -@@@@@%+++++++++*@@@@@@++++++#@=:.      \n");
         terminal_writestring("                             *@@@@@*++++++++++##%%*+++++#@@@%=      \n");
         terminal_writestring("                              =+++#%@%##*************##%@%*-        \n");
-    } 
-    else if (strcmp(input, "!help") == 0) {
-        terminal_writestring("Available commands:\n");
-        terminal_writestring("!help: Show available commands.\n");
-        terminal_writestring("!clear: Clear the terminal screen.\n");
-    }
-    else if (strcmp(input, "!clear") == 0) {
+    } else if (strcmp(input, "!clear") == 0) {
         terminal_initialize();  // Очистка экрана
-    } 
-    else {
-        terminal_writestring("unknown command\n");
+    } else if (strcmp(input, "!about") == 0) {
+        terminal_writestring("ZenOS: A simple custom operating system.\n");
+    } else if (strcmp(input, "!reboot") == 0) {
+        terminal_writestring("Rebooting...\n");
+        terminal_initialize();
+        welcome_message();
+    } else if (strcmp(input, "!date") == 0) {
+        terminal_writestring("The current date is 01/01/2024.\n");  // Здесь можно заменить на реальную дату, если добавить часы реального времени (RTC).
+    } else if (strcmp(input, "!help") == 0) {
+        terminal_writestring("Available commands:\n");
+        terminal_writestring("!ZenOS   - Display ZenOS logo\n");
+        terminal_writestring("!clear   - Clear the screen\n");
+        terminal_writestring("!about   - Display information about ZenOS\n");
+        terminal_writestring("!reboot  - Reboot ZenOS (reset the environment)\n");
+        terminal_writestring("!date    - Display the current date\n");
+        terminal_writestring("!help    - Show this help message\n");
+    } else if (strcmp(input, "!echo") == 0) {
+        terminal_writestring("Echo mode is now active. Type something:\n");
+        char buffer[256];
+        terminal_readstring(buffer, sizeof(buffer));
+        terminal_writestring("You entered: ");
+        terminal_writestring(buffer);
+        terminal_writestring("\n");
+    } else if (strcmp(input, "!shutdown") == 0) {
+        terminal_writestring("Shutting down the system...\n");
+    
+    // Завершаем работу системы, выполняя бесконечный цикл с hlt
+        while (true) {
+            asm volatile("hlt");
     }
-}
-
-static void terminal_backspace(void) {
-    terminal_hidecursor();
-    if (terminal_column > 0) {
-        terminal_column--;
-    } else if (terminal_row > 0) {
-        terminal_row--;
-        terminal_column = VGA_WIDTH - 1;
+    } else {
+        terminal_writestring("Unknown command. Type !help for a list of available commands.\n");
     }
-    terminal_putentryat(' ', terminal_color, terminal_column, terminal_row);
-    terminal_showcursor();
-}
-
-static void terminal_readstring(char* buffer, size_t max_length) {
-    size_t length = 0;
-    char c = ' ';
-
-    while (length < max_length - 1) {
-        c = keyboard_read();
-
-        if (c == '\n') {
-            terminal_putchar('\n');
-            break;
-        } else if (c == '\b') {
-            if (length > 0) {
-                length--;
-                terminal_backspace();
-            }
-        } else if (c >= ' ') {  // Только отображаемые символы
-            buffer[length++] = c;
-            terminal_putchar(c);
-        }
-    }
-    buffer[length] = '\0';  // Завершаем строку
 }
 
 static void set_prompt_color(void) {
@@ -215,18 +249,6 @@ static void set_prompt_color(void) {
     terminal_writestring("ZenOS> ");
     terminal_color = old_color;  // Возврат к старому цвету
     terminal_showcursor();  // Отображаем курсор после строки
-}
-
-static void delay() {
-    for (volatile int i = 0; i < 1000000000; i++) {
-        // Пустой цикл для задержки ~10 секунд
-    }
-}
-
-static void welcome_message(void) {
-    terminal_writestring("Welcome To ZenOS\n");
-    delay();
-    terminal_initialize();
 }
 
 void kernel_main(void) {
