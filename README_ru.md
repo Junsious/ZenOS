@@ -81,4 +81,9 @@
 ## Контакты
 Если у вас есть вопросы или предложения, вы можете связаться с разработчиком проекта через GitHub или по электронной почте: alexandrd542@gmail.com
 
+## Авторы
+
+Кодер - Junsious ([GitHub](https://github.com/junsious))
+
+Дизайнер - Konrad ([GitHub](https://github.com/WilliamKonRaDDD))
 ---
