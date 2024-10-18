@@ -1,7 +1,7 @@
 # ZenOS
 ![2](https://github.com/user-attachments/assets/47cff0b6-14a5-44d6-9dda-248524830bcb)
 
-- [RUS_README](https://github.com/Junsious/zen-kernel-OS/blob/main/README_ru.md)
+- [RU README](https://github.com/Junsious/zen-kernel-OS/blob/main/README_ru.md)
 
 
 ## If you have ideas, don’t be shy and write them, create threads, ask to be contributors, we will be only too glad to see new people in this project
@@ -83,4 +83,10 @@ This project is licensed under the GNU General Public License v3.0 (GPL-3.0). Se
 
 If you have any questions or suggestions, you can reach out to the project maintainer through GitHub or via email: alexandrd542@gmail.com
 
+
+## Creators 
+
+Coder - Junsious ([GitHub](https://github.com/junsious))
+
+Designer - Konrad ([GitHub](https://github.com/WilliamKonRaDDD))
 
