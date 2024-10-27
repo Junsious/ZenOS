@@ -1,6 +1,7 @@
 # ZenOS
 ![2](https://github.com/user-attachments/assets/47cff0b6-14a5-44d6-9dda-248524830bcb)
 
+
 - [RU README](https://github.com/Junsious/zen-kernel-OS/blob/main/README_ru.md)
 
 
